@@ -1,33 +1,12 @@
 import "reflect-metadata";
 import { ApolloServer } from "apollo-server";
-import { buildSchema, Mutation, Query, Resolver, Arg } from "type-graphql";
+import { buildSchema } from "type-graphql";
 import mongoose from "mongoose";
 import { MONGODB_URI } from "./utlils/config";
 import * as logger from "./utlils/logger";
-import { Boba, BobaModel } from "./models/Boba";
-
-@Resolver()
-class HelloResolver {
-  @Query(() => String)
-  async hello() {
-    return "Hello World!";
-  }
-
-  @Mutation(() => Boba)
-  async addBoba(
-    @Arg("drinkName") drinkName: string,
-    @Arg("sugarLevel") sugarLevel: string,
-    @Arg("iceLevel") iceLevel: string
-  ): Promise<Boba> {
-    const boba = await BobaModel.create({
-      drinkName,
-      iceLevel,
-      sugarLevel,
-    });
-    boba.save();
-    return boba;
-  }
-}
+import { AddBobaResolver } from "./modules/boba/AddBoba";
+import { ListBobaResolver } from "./modules/boba/ListBoba";
+import { RegisterResolver } from "./modules/user/Register";
 
 const setupDB = async () => {
   try {
@@ -44,7 +23,7 @@ const setupDB = async () => {
 
 const setupApollo = async () => {
   const schema = await buildSchema({
-    resolvers: [HelloResolver],
+    resolvers: [AddBobaResolver, ListBobaResolver, RegisterResolver],
   });
   const apolloServer = new ApolloServer({ schema });
   apolloServer.listen().then(({ url }) => {

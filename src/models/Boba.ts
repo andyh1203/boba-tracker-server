@@ -1,5 +1,6 @@
-import { prop, getModelForClass } from "@typegoose/typegoose";
+import { prop, getModelForClass, Ref } from "@typegoose/typegoose";
 import { Field, ObjectType, Root } from "type-graphql";
+import { User } from "./User";
 
 @ObjectType()
 export class Boba {
@@ -19,6 +20,10 @@ export class Boba {
   fullName(@Root() parent: Boba): string {
     return `${parent.drinkName} (sugar: ${parent.sugarLevel}, ice: ${parent.iceLevel})`;
   }
+
+  @Field()
+  @prop({ ref: User })
+  public user: Ref<User>;
 
   //   @prop()
   //   public toppings: string[];
