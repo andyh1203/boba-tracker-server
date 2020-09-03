@@ -3,13 +3,13 @@ import "reflect-metadata";
 import { Mutation, Resolver, Arg } from "type-graphql";
 import bcrypt from "bcrypt";
 import { User, UserModel } from "../../models/User";
-import { RegisterInput } from "./register/RegisterInput";
+import { RegisterUserInput } from "./register-user/RegisterUserInput";
 
 @Resolver()
-export class RegisterResolver {
+export class RegisterUserResolver {
   @Mutation(() => User)
   async register(
-    @Arg("data") { firstName, lastName, email, password }: RegisterInput
+    @Arg("data") { firstName, lastName, email, password }: RegisterUserInput
   ): Promise<User> {
     const passwordHash = await bcrypt.hash(password, 12);
     const user = await UserModel.create({
@@ -17,6 +17,7 @@ export class RegisterResolver {
       lastName,
       email,
       password: passwordHash,
+      bobas: [],
     });
     user.save();
     return user;

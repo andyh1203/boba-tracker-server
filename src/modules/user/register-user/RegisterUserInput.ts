@@ -1,9 +1,10 @@
 import { Length, IsEmail, MinLength } from "class-validator";
+// import { Boba } from "src/models/Boba";
 import { InputType, Field } from "type-graphql";
 import { IsEmailAlreadyExist } from "./isEmailAlreadyExist";
 
 @InputType()
-export class RegisterInput {
+export class RegisterUserInput {
   @Field()
   @Length(1, 255)
   firstName: string;

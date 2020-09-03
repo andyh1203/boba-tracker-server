@@ -8,7 +8,8 @@ import { Boba, BobaModel } from "../../models/Boba";
 export class ListBobaResolver {
   @Query(() => [Boba])
   async bobas(): Promise<Boba[]> {
-    const bobas = await BobaModel.find({});
+    const bobas = await BobaModel.find({}).populate("User");
+    console.log(bobas);
     return bobas;
   }
 }

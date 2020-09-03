@@ -14,4 +14,7 @@ export class AddBobaInput {
   @Field()
   @Length(1, 255)
   iceLevel: string;
+
+  @Field()
+  userId: string;
 }

@@ -6,7 +6,8 @@ import { MONGODB_URI } from "./utlils/config";
 import * as logger from "./utlils/logger";
 import { AddBobaResolver } from "./modules/boba/AddBoba";
 import { ListBobaResolver } from "./modules/boba/ListBoba";
-import { RegisterResolver } from "./modules/user/Register";
+import { RegisterUserResolver } from "./modules/user/RegisterUser";
+import { ListUserResolver } from "./modules/user/ListUser";
 
 const setupDB = async () => {
   try {
@@ -23,7 +24,12 @@ const setupDB = async () => {
 
 const setupApollo = async () => {
   const schema = await buildSchema({
-    resolvers: [AddBobaResolver, ListBobaResolver, RegisterResolver],
+    resolvers: [
+      AddBobaResolver,
+      ListBobaResolver,
+      RegisterUserResolver,
+      ListUserResolver,
+    ],
   });
   const apolloServer = new ApolloServer({ schema });
   apolloServer.listen().then(({ url }) => {
