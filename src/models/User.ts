@@ -1,4 +1,4 @@
-import { prop, getModelForClass, Ref, plugin } from "@typegoose/typegoose";
+import { prop, getModelForClass, plugin, Ref } from "@typegoose/typegoose";
 import { Field, ObjectType, Root } from "type-graphql";
 import { ObjectId } from "mongodb";
 import { Boba } from "./Boba";
@@ -31,8 +31,8 @@ export class User {
   }
 
   @Field(() => [Boba])
-  @prop({ type: Boba, default: [], autopopulate: true, _id: false })
-  bobas: Ref<Boba>[];
+  @prop({ ref: "Boba", default: [], autopopulate: true })
+  public bobas: Ref<Boba>[];
 }
 
 export const UserModel = getModelForClass(User, {

@@ -22,12 +22,8 @@ export class AddBobaResolver {
     const savedBoba = await boba.save();
     const user = await UserModel.findById(userId);
     if (user) {
-      console.log(savedBoba);
-      console.log(user.bobas);
-      user.bobas.push(boba.toJSON().id);
-      const savedUser = await user.save();
+      user.bobas = [...user.bobas, savedBoba._id];
       await user.save();
-      console.log(savedUser);
     } else {
       throw exception(`Could not find user with id ${userId}`);
     }
