@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { ApolloServer } from "apollo-server";
+import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import mongoose from "mongoose";
 import { MONGODB_URI } from "./utlils/config";
@@ -8,6 +8,13 @@ import { AddBobaResolver } from "./modules/boba/AddBoba";
 import { ListBobaResolver } from "./modules/boba/ListBoba";
 import { RegisterUserResolver } from "./modules/user/RegisterUser";
 import { ListUserResolver } from "./modules/user/ListUser";
+import { LoginUserResolver } from "./modules/user/LoginUser";
+import Express from "express";
+import session from "express-session";
+import connectRedis from "connect-redis";
+import { redis } from "./redis";
+import cors from "cors";
+import { MeResolver } from "./modules/user/Me";
 
 const setupDB = async () => {
   try {
@@ -22,24 +29,55 @@ const setupDB = async () => {
   }
 };
 
-const setupApollo = async () => {
+const setupServer = async () => {
   const schema = await buildSchema({
     resolvers: [
       AddBobaResolver,
       ListBobaResolver,
       RegisterUserResolver,
       ListUserResolver,
+      LoginUserResolver,
+      MeResolver,
     ],
   });
-  const apolloServer = new ApolloServer({ schema });
-  apolloServer.listen().then(({ url }) => {
-    logger.info(`Server ready at ${url}`);
+  const apolloServer = new ApolloServer({
+    schema,
+    context: ({ req }: any) => ({ req }),
+  });
+  const app = Express();
+  app.use(
+    cors({
+      credentials: true,
+      origin: "http://localhost:3000",
+    })
+  );
+  const RedisStore = connectRedis(session);
+  app.use(
+    session({
+      store: new RedisStore({
+        client: redis,
+      }),
+      name: "qid",
+      secret: "sekred",
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 1000 * 60 * 60 * 24 * 7 * 365,
+      },
+    } as any)
+  );
+
+  apolloServer.applyMiddleware({ app });
+  app.listen(4000, () => {
+    console.log("server started on http://localhost:4000/graphql");
   });
 };
 
 const main = async () => {
   setupDB();
-  setupApollo();
+  setupServer();
 };
 
 main();
