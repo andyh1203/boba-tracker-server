@@ -1,10 +1,10 @@
-import { Length, IsEmail, MinLength } from "class-validator";
-// import { Boba } from "src/models/Boba";
+import { Length, IsEmail } from "class-validator";
 import { InputType, Field } from "type-graphql";
 import { IsEmailAlreadyExist } from "./isEmailAlreadyExist";
+import { PasswordInput } from "../../shared/PasswordInput"
 
 @InputType()
-export class RegisterUserInput {
+export class RegisterUserInput extends PasswordInput {
   @Field()
   @Length(1, 255)
   firstName: string;
@@ -18,8 +18,4 @@ export class RegisterUserInput {
   @IsEmail()
   @IsEmailAlreadyExist({ message: "email already exists" })
   email: string;
-
-  @Field()
-  @MinLength(8)
-  password: string;
 }

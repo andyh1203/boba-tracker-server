@@ -2,20 +2,13 @@ import "reflect-metadata";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import mongoose from "mongoose";
-import { MONGODB_URI } from "./utlils/config";
-import * as logger from "./utlils/logger";
-import { AddBobaResolver } from "./modules/boba/AddBoba";
-import { ListBobaResolver } from "./modules/boba/ListBoba";
-import { RegisterUserResolver } from "./modules/user/RegisterUser";
-import { ListUserResolver } from "./modules/user/ListUser";
-import { LoginUserResolver } from "./modules/user/LoginUser";
-import { LogoutUserResolver } from "./modules/user/LogoutUser";
+import { MONGODB_URI } from "./utils/config";
+import * as logger from "./utils/logger";
 import Express from "express";
 import session from "express-session";
 import connectRedis from "connect-redis";
 import { redis } from "./redis";
 import cors from "cors";
-import { MeResolver } from "./modules/user/Me";
 
 const setupDB = async () => {
   try {
@@ -33,13 +26,7 @@ const setupDB = async () => {
 const setupServer = async () => {
   const schema = await buildSchema({
     resolvers: [
-      AddBobaResolver,
-      ListBobaResolver,
-      RegisterUserResolver,
-      ListUserResolver,
-      LoginUserResolver,
-      MeResolver,
-      LogoutUserResolver,
+      __dirname + '/modules/**/*.ts'
     ],
   });
   const apolloServer = new ApolloServer({

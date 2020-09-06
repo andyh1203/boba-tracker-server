@@ -24,6 +24,10 @@ export class LoginUserResolver {
       return null;
     }
 
+    if (!user.confirmed) {
+      return null
+    }
+
     ctx.req.session!.userId = user.toJSON().id;
 
     return user;

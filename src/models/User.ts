@@ -33,6 +33,9 @@ export class User {
   @Field(() => [Boba])
   @prop({ ref: "Boba", default: [], autopopulate: true })
   public bobas: Ref<Boba>[];
+
+  @prop({ default: false })
+  confirmed?: boolean;
 }
 
 export const UserModel = getModelForClass(User, {
