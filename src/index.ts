@@ -9,6 +9,7 @@ import { ListBobaResolver } from "./modules/boba/ListBoba";
 import { RegisterUserResolver } from "./modules/user/RegisterUser";
 import { ListUserResolver } from "./modules/user/ListUser";
 import { LoginUserResolver } from "./modules/user/LoginUser";
+import { LogoutUserResolver } from "./modules/user/LogoutUser";
 import Express from "express";
 import session from "express-session";
 import connectRedis from "connect-redis";
@@ -38,6 +39,7 @@ const setupServer = async () => {
       ListUserResolver,
       LoginUserResolver,
       MeResolver,
+      LogoutUserResolver,
     ],
   });
   const apolloServer = new ApolloServer({
