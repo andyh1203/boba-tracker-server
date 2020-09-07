@@ -16,6 +16,7 @@ const setupDB = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useCreateIndex: true,
+      useFindAndModify: true,
     });
     logger.info("Connected to MongoDB");
   } catch (err) {
@@ -25,9 +26,7 @@ const setupDB = async () => {
 
 const setupServer = async () => {
   const schema = await buildSchema({
-    resolvers: [
-      __dirname + '/modules/**/*.ts'
-    ],
+    resolvers: [__dirname + "/modules/**/*.ts"],
   });
   const apolloServer = new ApolloServer({
     schema,
