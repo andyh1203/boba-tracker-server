@@ -9,6 +9,7 @@ import session from "express-session";
 import connectRedis from "connect-redis";
 import { redis } from "./redis";
 import cors from "cors";
+import { COOKIE_NAME } from "./constants/cookie";
 
 const setupDB = async () => {
   try {
@@ -44,8 +45,9 @@ const setupServer = async () => {
     session({
       store: new RedisStore({
         client: redis,
+        disableTouch: true,
       }),
-      name: "qid",
+      name: COOKIE_NAME,
       secret: "sekred",
       resave: false,
       saveUninitialized: false,

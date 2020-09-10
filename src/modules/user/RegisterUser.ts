@@ -13,10 +13,6 @@ export class RegisterUserResolver {
   async register(
     @Arg("data") { firstName, lastName, email, password }: RegisterUserInput
   ): Promise<User> {
-    console.log(firstName);
-    console.log(lastName);
-    console.log(email);
-    console.log(password);
     const passwordHash = await bcrypt.hash(password, 12);
     const user = await UserModel.create({
       firstName,
