@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { COOKIE_NAME } from "../../constants/cookie";
+import { COOKIE_NAME } from "../../constants";
 
 import { Mutation, Resolver, Ctx } from "type-graphql";
 import { MyContext } from "../../types/MyContext";

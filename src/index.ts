@@ -7,9 +7,9 @@ import * as logger from "./utils/logger";
 import Express from "express";
 import session from "express-session";
 import connectRedis from "connect-redis";
-import { redis } from "./redis";
+import Redis from "ioredis";
 import cors from "cors";
-import { COOKIE_NAME } from "./constants/cookie";
+import { COOKIE_NAME } from "./constants";
 
 const setupDB = async () => {
   try {
@@ -29,9 +29,10 @@ const setupServer = async () => {
   const schema = await buildSchema({
     resolvers: [__dirname + "/modules/**/*.ts"],
   });
+  const redis = new Redis({ host: "localhost", port: 6379 });
   const apolloServer = new ApolloServer({
     schema,
-    context: ({ req }: any) => ({ req }),
+    context: ({ req, res }: any) => ({ req, res, redis }),
   });
   const app = Express();
   app.use(
