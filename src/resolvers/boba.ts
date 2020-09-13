@@ -1,11 +1,11 @@
 import { Mutation, Resolver, Arg, Query } from "type-graphql";
 
-import { BobaModel } from "../entities/Boba";
+import { BobaModel, Boba } from "../entities/Boba";
 import { UserModel } from "..//entities/User";
 
 import { validateBoba } from "../utils/validateInputs";
 import { AddBobaInput, BaseBobaInput } from "./inputs/BobaInput";
-import { BobaResponse, BobasResponse } from "./responseTypes";
+import { BobaResponse } from "./responseTypes";
 
 @Resolver()
 export class BobaResolver {
@@ -48,10 +48,10 @@ export class BobaResolver {
     return true;
   }
 
-  @Query(() => BobasResponse)
-  async bobas(): Promise<BobasResponse> {
+  @Query(() => [Boba])
+  async bobas() {
     const bobas = await BobaModel.find({}).populate("User");
-    return { bobas };
+    return bobas;
   }
 
   @Mutation(() => BobaResponse)

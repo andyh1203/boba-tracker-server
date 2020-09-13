@@ -20,16 +20,6 @@ export class BobaResponse {
   @Field(() => Boba, { nullable: true })
   boba?: Boba;
 }
-
-@ObjectType()
-export class BobasResponse {
-  @Field(() => [FieldError], { nullable: true })
-  errors?: FieldError[];
-
-  @Field(() => [Boba], { nullable: true })
-  bobas?: Boba[];
-}
-
 @ObjectType()
 export class UserResponse {
   @Field(() => [FieldError], { nullable: true })

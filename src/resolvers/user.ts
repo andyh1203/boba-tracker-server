@@ -38,17 +38,37 @@ export class UserResolver {
   ) {
     const user = await UserModel.findOne({ email });
     if (!user) {
-      return null;
+      return {
+        errors: [
+          { type: "UserNotFound", field: "email", message: "User not found" },
+        ],
+      };
     }
 
     const valid = await argon2.verify(user.password, password);
 
     if (!valid) {
-      return null;
+      return {
+        errors: [
+          {
+            type: "IncorrectPassword",
+            field: "password",
+            message: "Incorrect password",
+          },
+        ],
+      };
     }
 
     if (!user.confirmed) {
-      return null;
+      return {
+        errors: [
+          {
+            type: "UnconfirmedUser",
+            field: "password",
+            message: "Please confirm account",
+          },
+        ],
+      };
     }
 
     ctx.req.session!.userId = user.toJSON().id;
