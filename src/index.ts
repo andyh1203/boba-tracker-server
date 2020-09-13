@@ -27,7 +27,8 @@ const setupDB = async () => {
 
 const setupServer = async () => {
   const schema = await buildSchema({
-    resolvers: [__dirname + "/modules/**/*.ts"],
+    resolvers: [__dirname + "/resolvers/*.ts"],
+    validate: false,
   });
   const redis = new Redis({ host: "localhost", port: 6379 });
   const apolloServer = new ApolloServer({
