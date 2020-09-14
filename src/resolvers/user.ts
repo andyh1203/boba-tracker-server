@@ -91,7 +91,7 @@ export class UserResolver {
     if (!userId) {
       return {
         errors: [
-          { type: "TokenExpired", field: "password", message: "Token expired" },
+          { type: "TokenExpired", field: "token", message: "Token expired" },
         ],
       };
     }
@@ -99,7 +99,15 @@ export class UserResolver {
     const user = await UserModel.findById(userId);
 
     if (!user) {
-      return null;
+      return {
+        errors: [
+          {
+            type: "UserDoesNotExist",
+            field: "password",
+            message: "user no longer exists",
+          },
+        ],
+      };
     }
     await ctx.redis.del(FORGOT_PASSWORD_PREFIX + token);
     user.password = await argon2.hash(password);
@@ -174,7 +182,6 @@ export class UserResolver {
       email,
       password,
     });
-    console.log(errors);
     if (errors) {
       return { errors };
     }
