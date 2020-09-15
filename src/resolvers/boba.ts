@@ -1,17 +1,28 @@
-import { Mutation, Resolver, Arg, Query } from "type-graphql";
+import {
+  Mutation,
+  Resolver,
+  Arg,
+  Query,
+  Ctx,
+  UseMiddleware,
+} from "type-graphql";
 
 import { BobaModel, Boba } from "../entities/Boba";
 import { UserModel } from "..//entities/User";
 
 import { validateBoba } from "../utils/validateInputs";
-import { AddBobaInput, BaseBobaInput } from "./inputs/BobaInput";
+import { BobaInput } from "./inputs/BobaInput";
 import { BobaResponse } from "./responseTypes";
+import { MyContext } from "src/types";
+import { isAuth } from "../middleware/isAuth";
 
 @Resolver()
 export class BobaResolver {
   @Mutation(() => BobaResponse)
+  @UseMiddleware(isAuth)
   async addBoba(
-    @Arg("data") { drinkName, iceLevel, sugarLevel, userId }: AddBobaInput
+    @Arg("data") { drinkName, iceLevel, sugarLevel }: BobaInput,
+    @Ctx() { req }: MyContext
   ): Promise<BobaResponse> {
     const errors = validateBoba({ drinkName, iceLevel, sugarLevel });
     if (errors) {
@@ -21,9 +32,9 @@ export class BobaResolver {
       drinkName,
       iceLevel,
       sugarLevel,
-      user: userId,
+      user: req.session?.userId,
     });
-    const user = await UserModel.findById(userId);
+    const user = await UserModel.findById(req.session?.userId);
     if (user) {
       const savedBoba = await boba.save();
       user.bobas = [...user.bobas, savedBoba._id];
@@ -39,6 +50,7 @@ export class BobaResolver {
   }
 
   @Mutation(() => Boolean)
+  @UseMiddleware(isAuth)
   async deleteBoba(@Arg("bobaId") bobaId: string): Promise<Boolean> {
     const boba = await BobaModel.findById(bobaId);
     if (!boba) {
@@ -55,9 +67,10 @@ export class BobaResolver {
   }
 
   @Mutation(() => BobaResponse)
+  @UseMiddleware(isAuth)
   async updateBoba(
     @Arg("bobaId") bobaId: string,
-    @Arg("updatedInput") updatedInput: BaseBobaInput
+    @Arg("updatedInput") updatedInput: BobaInput
   ): Promise<BobaResponse | null> {
     const errors = validateBoba(updatedInput);
     if (errors) {

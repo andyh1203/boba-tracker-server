@@ -1,9 +1,9 @@
-import { BaseBobaInput } from "../resolvers/inputs/BobaInput";
+import { BobaInput } from "../resolvers/inputs/BobaInput";
 import { RegisterUserInput } from "../resolvers/inputs/UserInput";
 import validator from "validator";
 import { UserModel } from "../entities/User";
 
-export const validateBoba = (options: BaseBobaInput) => {
+export const validateBoba = (options: BobaInput) => {
   for (const [option, value] of Object.entries(options)) {
     if (!validator.isLength(value as string, { min: 1 })) {
       return [

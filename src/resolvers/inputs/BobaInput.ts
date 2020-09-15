@@ -1,7 +1,7 @@
 import { InputType, Field } from "type-graphql";
 
 @InputType()
-export class BaseBobaInput {
+export class BobaInput {
   @Field()
   drinkName: string;
 
@@ -10,10 +10,4 @@ export class BaseBobaInput {
 
   @Field()
   iceLevel: string;
-}
-
-@InputType()
-export class AddBobaInput extends BaseBobaInput {
-  @Field()
-  userId: string;
 }

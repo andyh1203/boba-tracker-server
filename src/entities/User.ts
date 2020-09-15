@@ -1,5 +1,5 @@
 import { prop, getModelForClass, plugin, Ref } from "@typegoose/typegoose";
-import { Field, ObjectType, Root } from "type-graphql";
+import { Field, ObjectType } from "type-graphql";
 import { ObjectId } from "mongodb";
 import { Boba } from "./Boba";
 import autopopulate from "mongoose-autopopulate";
@@ -25,21 +25,25 @@ export class User {
   @prop({ required: true })
   public password: string;
 
-  @Field()
-  fullName(@Root() parent: User): string {
-    return `${parent.firstName} ${parent.lastName}`;
-  }
-
   @Field(() => [Boba])
   @prop({ ref: "Boba", default: [], autopopulate: true })
   public bobas: Ref<Boba>[];
 
   @prop({ default: false })
   confirmed?: boolean;
+
+  @Field()
+  @prop()
+  public createdAt?: Date;
+
+  @Field()
+  @prop()
+  public updatedAt?: Date;
 }
 
 export const UserModel = getModelForClass(User, {
   schemaOptions: {
+    timestamps: true,
     toJSON: {
       transform: (_, ret) => {
         ret.id = ret._id.toString();
