@@ -5,6 +5,7 @@ import {
   Query,
   Ctx,
   UseMiddleware,
+  Int,
 } from "type-graphql";
 
 import { BobaModel, Boba } from "../entities/Boba";
@@ -61,8 +62,17 @@ export class BobaResolver {
   }
 
   @Query(() => [Boba])
-  async bobas() {
-    const bobas = await BobaModel.find({}).populate("User");
+  async bobas(
+    @Arg("limit", () => Int) limit: number,
+    @Arg("cursor", () => String, { nullable: true }) cursor: string | null
+  ) {
+    const realLimit = Math.min(limit, 20);
+    const filter = cursor ? { createdAt: { $lt: new Date(cursor) } } : {};
+    console.log(filter);
+    const bobas = await BobaModel.find(filter)
+      .limit(realLimit)
+      .sort("-createdAt")
+      .populate("User");
     return bobas;
   }
 
