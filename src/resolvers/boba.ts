@@ -6,6 +6,8 @@ import {
   Ctx,
   UseMiddleware,
   Int,
+  FieldResolver,
+  Root,
 } from "type-graphql";
 
 import { BobaModel, Boba } from "../entities/Boba";
@@ -17,8 +19,13 @@ import { BobaResponse } from "./responseTypes";
 import { MyContext } from "src/types";
 import { isAuth } from "../middleware/isAuth";
 
-@Resolver()
+@Resolver(Boba)
 export class BobaResolver {
+  @FieldResolver(() => String)
+  drinkDescription(@Root() root: Boba) {
+    return `Sugar: ${root.sugarLevel}, Ice: ${root.iceLevel}`;
+  }
+
   @Mutation(() => BobaResponse)
   @UseMiddleware(isAuth)
   async addBoba(
@@ -68,7 +75,6 @@ export class BobaResolver {
   ) {
     const realLimit = Math.min(limit, 20);
     const filter = cursor ? { createdAt: { $lt: new Date(cursor) } } : {};
-    console.log(filter);
     const bobas = await BobaModel.find(filter)
       .limit(realLimit)
       .sort("-createdAt")
