@@ -8,6 +8,8 @@ import {
   Int,
   FieldResolver,
   Root,
+  ObjectType,
+  Field,
 } from "type-graphql";
 
 import { BobaModel, Boba } from "../entities/Boba";
@@ -19,6 +21,13 @@ import { BobaResponse } from "./responseTypes";
 import { MyContext } from "src/types";
 import { isAuth } from "../middleware/isAuth";
 
+@ObjectType()
+class PaginatedBobas {
+  @Field(() => [Boba])
+  bobas: Boba[];
+  @Field()
+  hasMore: boolean;
+}
 @Resolver(Boba)
 export class BobaResolver {
   @FieldResolver(() => String)
@@ -68,18 +77,20 @@ export class BobaResolver {
     return true;
   }
 
-  @Query(() => [Boba])
+  @Query(() => PaginatedBobas)
   async bobas(
     @Arg("limit", () => Int) limit: number,
     @Arg("cursor", () => String, { nullable: true }) cursor: string | null
-  ) {
-    const realLimit = Math.min(limit, 20);
+  ): Promise<PaginatedBobas> {
+    const realLimit = Math.min(limit, 50);
+    const realLimitPlusOne = realLimit + 1;
     const filter = cursor ? { createdAt: { $lt: new Date(cursor) } } : {};
-    const bobas = await BobaModel.find(filter)
-      .limit(realLimit)
+    const bobasFromDb = await BobaModel.find(filter)
+      .limit(realLimitPlusOne)
       .sort("-createdAt")
       .populate("User");
-    return bobas;
+    const bobas = bobasFromDb.slice(0, realLimit);
+    return { bobas, hasMore: bobasFromDb.length === realLimitPlusOne };
   }
 
   @Mutation(() => BobaResponse)
