@@ -1,4 +1,4 @@
-import { Mutation, Resolver, Arg, Ctx, Query } from "type-graphql";
+import { Mutation, Resolver, Arg, Ctx, Query, FieldResolver, Root } from "type-graphql";
 import { UserModel, User } from "../entities/User";
 import argon2 from "argon2";
 import { MyContext } from "../types";
@@ -13,8 +13,17 @@ import { UserResponse, UsersResponse } from "./responseTypes";
 import { validatePassword, validateRegister } from "../utils/validateInputs";
 import { RegisterUserInput } from "./inputs/UserInput";
 
-@Resolver()
+@Resolver(User)
 export class UserResolver {
+
+  @FieldResolver(() => String)
+  email(@Root() user: any, @Ctx() {req}: MyContext) {
+    if (req.session?.userId === user._doc._id.toString()) {
+      return user.email
+    }
+    return ""
+  }
+
   @Query(() => UsersResponse)
   async users() {
     const users = await UserModel.find({}).populate("Bobas");
