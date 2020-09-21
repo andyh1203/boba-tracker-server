@@ -26,6 +26,10 @@ export class Boba {
   @prop({ ref: User, required: true, autopopulate: true })
   public user: Ref<User>;
 
+  @Field(() => [String])
+  @prop({ref: "String"})
+  public likes: String[]
+
   @Field()
   @prop()
   public createdAt?: Date;

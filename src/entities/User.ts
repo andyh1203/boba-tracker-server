@@ -32,6 +32,10 @@ export class User {
   @prop({ default: false })
   confirmed?: boolean;
 
+  @Field(() => [String])
+  @prop({ref: "String", default: []})
+  public likes: String[]
+
   @Field()
   @prop()
   public createdAt?: Date;

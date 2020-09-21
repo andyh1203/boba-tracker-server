@@ -68,6 +68,25 @@ export class BobaResolver {
 
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
+  async likeBoba(@Arg("bobaId") bobaId: string, @Ctx() {req}: MyContext) {
+    const boba = await BobaModel.findById(bobaId);
+    if (!boba) {
+      return false;
+    }
+    const userHasLiked = boba?.likes.includes(req.session?.userId)
+    if (userHasLiked) {
+      return false;
+    }
+    boba.likes = [...boba.likes, req.session?.userId]
+    const user = await UserModel.findById(req.session?.userId)
+    user!.likes = [...user!.likes, bobaId]
+    await boba.save()
+    await user!.save()
+    return true;
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuth)
   async deleteBoba(@Arg("bobaId") bobaId: string): Promise<Boolean> {
     const boba = await BobaModel.findById(bobaId);
     if (!boba) {
