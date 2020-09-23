@@ -66,24 +66,52 @@ export class BobaResolver {
     return { boba };
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => String)
   @UseMiddleware(isAuth)
   async likeBoba(@Arg("bobaId") bobaId: string, @Ctx() {req}: MyContext) {
     const boba = await BobaModel.findById(bobaId);
     if (!boba) {
-      return false;
+      return null;
     }
     const userHasLiked = boba?.likes.includes(req.session?.userId)
     if (userHasLiked) {
-      return false;
+      return null;
     }
     boba.likes = [...boba.likes, req.session?.userId]
     const user = await UserModel.findById(req.session?.userId)
-    user!.likes = [...user!.likes, bobaId]
+    if (!user) {
+      return null;
+    }
+    user.likes?.push(bobaId);
     await boba.save()
     await user!.save()
-    return true;
+    return req.session?.userId;
   }
+
+  @Mutation(() => String)
+  @UseMiddleware(isAuth)
+  async dislikeBoba(@Arg("bobaId") bobaId: string, @Ctx() {req}: MyContext) {
+    const boba = await BobaModel.findById(bobaId);
+    if (!boba) {
+      return "";
+    }
+    const bobaLikes = boba.likes
+    const userHasLiked = bobaLikes.includes(req.session?.userId)
+    if (userHasLiked) {
+      const user = await UserModel.findById(req.session?.userId);
+      if (!user) {
+        return "";
+      }
+      const userLikes = user.likes;
+      user.likes = userLikes?.filter(l => l.toString() !== bobaId);
+      boba.likes = bobaLikes.filter(l => l.toString() !== req.session?.userId)
+      await boba.save();
+      await user.save();
+      return req.session?.userId;
+    }
+    return "";
+  }
+
 
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)

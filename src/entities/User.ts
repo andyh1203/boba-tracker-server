@@ -34,7 +34,7 @@ export class User {
 
   @Field(() => [String])
   @prop({ref: "String", default: []})
-  public likes: String[]
+  public likes?: String[]
 
   @Field()
   @prop()
