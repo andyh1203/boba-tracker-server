@@ -140,6 +140,12 @@ export class BobaResolver {
     return { bobas, hasMore: bobasFromDb.length === realLimitPlusOne };
   }
 
+  @Query(() => Boba)
+  async boba(@Arg("bobaId") bobaId: string) {
+    const boba = await BobaModel.findById(bobaId);
+    return boba;
+  }
+
   @Mutation(() => BobaResponse)
   @UseMiddleware(isAuth)
   async updateBoba(
