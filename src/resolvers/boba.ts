@@ -13,7 +13,7 @@ import {
 } from "type-graphql";
 
 import { BobaModel, Boba } from "../entities/Boba";
-import { UserModel } from "..//entities/User";
+import { User, UserModel } from "..//entities/User";
 
 import { validateBoba } from "../utils/validateInputs";
 import { BobaInput } from "./inputs/BobaInput";
@@ -115,13 +115,17 @@ export class BobaResolver {
 
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
-  async deleteBoba(@Arg("bobaId") bobaId: string): Promise<Boolean> {
+  async deleteBoba(@Arg("bobaId") bobaId: string, @Ctx() {req}: MyContext): Promise<Boolean> {
     const boba = await BobaModel.findById(bobaId);
     if (!boba) {
       return false;
     }
-    await boba.deleteOne();
-    return true;
+    const user = boba.user as User;
+    if (user._id.toString() === req.session?.userId) {
+      await boba.deleteOne();
+      return true;
+    }
+    return false
   }
 
   @Query(() => PaginatedBobas)
@@ -153,21 +157,22 @@ export class BobaResolver {
     @Arg("updatedInput") updatedInput: BobaInput
   ): Promise<BobaResponse | null> {
     const errors = validateBoba(updatedInput);
+
     if (errors) {
       return { errors };
     }
-    const updatedboba = await BobaModel.findByIdAndUpdate(
+    const updatedBoba = await BobaModel.findByIdAndUpdate(
       bobaId,
       updatedInput,
       { new: true }
     );
-    if (!updatedboba) {
+    if (!updatedBoba) {
       return {
         errors: [
           { type: "BobaNotFound", field: "_id", message: "Boba not found" },
         ],
       };
     }
-    return updatedboba;
+    return { boba: updatedBoba };
   }
 }
