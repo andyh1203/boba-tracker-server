@@ -207,6 +207,13 @@
   dependencies:
     "@types/express" "*"
 
+"@types/dotenv-safe@^8.1.1":
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/@types/dotenv-safe/-/dotenv-safe-8.1.1.tgz#2d7248ed4ad969c41d85586266ad64e9a3603ad4"
+  integrity sha512-JOJuWwYaRinKl3UdmTivWgXO66dKpGW67NaYRMSMjKsNjF+MTsnc/T656I8eNGokIHVLihkY1kx96Ho3l8vfqQ==
+  dependencies:
+    dotenv "^8.2.0"
+
 "@types/dotenv@^8.2.0":
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/@types/dotenv/-/dotenv-8.2.0.tgz#5cd64710c3c98e82d9d15844375a33bf1b45d053"
@@ -1157,6 +1164,13 @@ doctrine@^3.0.0:
   dependencies:
     esutils "^2.0.2"
 
+dotenv-safe@^8.2.0:
+  version "8.2.0"
+  resolved "https://registry.yarnpkg.com/dotenv-safe/-/dotenv-safe-8.2.0.tgz#8d548c7318a62c09a66c4dc8c31864cc007c78ba"
+  integrity sha512-uWwWWdUQkSs5a3mySDB22UtNwyEYi0JtEQu+vDzIqr9OjbDdC2Ip13PnSpi/fctqlYmzkxCeabiyCAOROuAIaA==
+  dependencies:
+    dotenv "^8.2.0"
+
 dotenv@*, dotenv@^8.2.0:
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.2.0.tgz#97e619259ada750eea3e4ea3e26bceea5424b16a"
@@ -1546,6 +1560,13 @@ gauge@~2.7.3:
     string-width "^1.0.1"
     strip-ansi "^3.0.1"
     wide-align "^1.1.0"
+
+gen-env-types@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/gen-env-types/-/gen-env-types-1.0.4.tgz#a8f635790ea6f0cc35953f58d5013580dd08f0f4"
+  integrity sha512-cYxgeOcMm/46pA28j2ga0GSNVgT+HLRjFoqRiYPkL/HyAcma/V6Er3EzLBihnrtCN9Fm0iC7UgZit9l9yQtKiA==
+  dependencies:
+    chalk "^4.0.0"
 
 get-stdin@^4.0.1:
   version "4.0.1"

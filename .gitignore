@@ -21,6 +21,9 @@ yarn-error.log*
 
 .vscode/
 
-.env.*
+.env.development
+.env.production
 
 sample_data.json
+
+dist/

@@ -29,8 +29,8 @@ export class User {
   @prop({ ref: "Boba", default: [], autopopulate: true })
   public bobas: Ref<Boba>[];
 
-  @prop({ default: false })
-  confirmed?: boolean;
+  // @prop({ default: false })
+  // confirmed?: boolean;
 
   @Field(() => [String])
   @prop({ref: "String", default: []})

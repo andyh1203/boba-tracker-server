@@ -68,17 +68,17 @@ export class UserResolver {
       };
     }
 
-    if (!user.confirmed) {
-      return {
-        errors: [
-          {
-            type: "UnconfirmedUser",
-            field: "password",
-            message: "Please confirm account",
-          },
-        ],
-      };
-    }
+    // if (!user.confirmed) {
+    //   return {
+    //     errors: [
+    //       {
+    //         type: "UnconfirmedUser",
+    //         field: "password",
+    //         message: "Please confirm account",
+    //       },
+    //     ],
+    //   };
+    // }
 
     ctx.req.session!.userId = user.toJSON().id;
 
@@ -126,19 +126,19 @@ export class UserResolver {
     return { user };
   }
 
-  @Mutation(() => Boolean)
-  async confirmUser(@Arg("token") token: string, @Ctx() { redis }: MyContext) {
-    const userId = await redis.get(CONFIRM_USER_PREFIX + token);
+  // @Mutation(() => Boolean)
+  // async confirmUser(@Arg("token") token: string, @Ctx() { redis }: MyContext) {
+  //   const userId = await redis.get(CONFIRM_USER_PREFIX + token);
 
-    if (!userId) {
-      return false;
-    }
+  //   if (!userId) {
+  //     return false;
+  //   }
 
-    await UserModel.updateOne({ _id: userId }, { confirmed: true });
-    await redis.del(token);
+  //   await UserModel.updateOne({ _id: userId }, { confirmed: true });
+  //   await redis.del(token);
 
-    return true;
-  }
+  //   return true;
+  // }
 
   @Mutation(() => Boolean)
   async forgotPassword(
@@ -202,7 +202,7 @@ export class UserResolver {
       email,
       password: passwordHash,
       bobas: [],
-      confirmed: false,
+      // confirmed: false,
     });
     user.save();
 
@@ -214,11 +214,11 @@ export class UserResolver {
       60 * 60 * 24
     );
 
-    await sendEmail(
-      email,
-      "Confirmation Email",
-      `<a href="http://localhost:3000/confirm/${token}">confirm</a>`
-    );
+    // await sendEmail(
+    //   email,
+    //   "Confirmation Email",
+    //   `<a href="http://localhost:3000/confirm/${token}">confirm</a>`
+    // );
     return { user };
   }
 }
