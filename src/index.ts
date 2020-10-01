@@ -2,7 +2,7 @@ import "reflect-metadata";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import mongoose from "mongoose";
-import { MONGO_URL, PORT, REDIS_URL, SESSION_SECRET } from "./utils/config";
+import { CORS_ORIGIN, MONGO_URL, PORT, REDIS_URL, SESSION_SECRET } from "./utils/config";
 import * as logger from "./utils/logger";
 import Express from "express";
 import session from "express-session";
@@ -40,7 +40,7 @@ const setupServer = async () => {
   app.use(
     cors({
       credentials: true,
-      origin: "http://localhost:3000",
+      origin: CORS_ORIGIN,
     })
   );
   const RedisStore = connectRedis(session);
