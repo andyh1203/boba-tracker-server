@@ -27,3 +27,6 @@ jobs:
           platforms: linux/amd64,linux/arm64,linux/386
           push: true
           tags: andyhuynh/boba-tracker-server:latest
+        env:
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+          CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }
