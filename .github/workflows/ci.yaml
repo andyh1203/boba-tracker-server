@@ -25,4 +25,8 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: whoami
+          script: |
+            docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+            docker pull andyhuynh/boba-tracker-server:latest
+            docker tag andyhuynh/boba-tracker-server:latest dokku/api:latest
+            dokku tags:deploy api
