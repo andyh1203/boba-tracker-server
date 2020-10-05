@@ -29,4 +29,4 @@ jobs:
           tags: andyhuynh/boba-tracker-server:latest
         env:
           SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
-          CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }
+          CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
