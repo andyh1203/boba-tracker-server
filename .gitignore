@@ -27,3 +27,7 @@ yarn-error.log*
 sample_data.json
 
 dist/
+
+env.tfvars
+terraform.tfstate
+terraform.tfstate.backup
