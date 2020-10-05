@@ -12,14 +12,13 @@ jobs:
         uses: actions/checkout@v2
       - name: "Docker build push"
         uses: mr-smithers-excellent/docker-build-push@v4
-        env:
-          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
-          CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
         with:
           image: andyhuynh/boba-tracker-server
           registry: docker.io
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          buildArgs: SESSION_SECRET=${{ secrets.SESSION_SECRET }},CORS_ORIGIN=${{ secrets.CORS_ORIGIN }}
+
       # - name: Set up QEMU
       #   uses: docker/setup-qemu-action@v1
       # - name: Set up Docker Buildx

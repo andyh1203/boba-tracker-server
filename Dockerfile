@@ -1,6 +1,9 @@
 FROM node:14
 LABEL maintainer="Andy Huynh"
 
+ARG SESSION_SECRET=sekred
+ARG CORS_ORIGIN=http://localhost:3000
+
 # Create app directory
 WORKDIR /usr/src/app
 
@@ -19,6 +22,8 @@ COPY . .
 RUN yarn build
 
 ENV NODE_ENV production
+ENV SESSION_SECRET=$SESSION_SECRET
+ENV CORS_ORIGIN=$CORS_ORIGIN
 
 EXPOSE 8080
 CMD [ "node", "dist/index.js" ]
