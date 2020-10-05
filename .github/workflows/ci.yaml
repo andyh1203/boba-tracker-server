@@ -5,7 +5,7 @@ on:
     branches: master
 
 jobs:
-  docker-build-push:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -19,3 +19,10 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
           buildArgs: SESSION_SECRET=${{ secrets.SESSION_SECRET }},CORS_ORIGIN=${{ secrets.CORS_ORIGIN }}
           tag: latest
+      - name: Update API
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: whoami
